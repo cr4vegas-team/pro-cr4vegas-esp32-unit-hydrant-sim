@@ -3,14 +3,13 @@
 
 void setupSensors();
 void loopSensors();
-
-uint32_t getLectura();
-void setLectura(uint32_t lecturaP);
-double getCaudal();
-
-uint32_t getTemperature();
-uint32_t getHumidity();
-
+int getBoyaBaja();
+int getBoyaMedia();
+int getBoyaAlta();
+int getElectrovalvula();
+void setElectrovalvula(int electrovalvulaP);
+long getLectura();
+void setLectura(long lecturaP);
+float getCaudal();
 int getEvent();
 void setEvent(int eventP);
-int getSaving();

@@ -1,5 +1,6 @@
 #include "../sensors/sensors.h"
 #include "../main.h"
+#include "../sensors/sensors.h"
 
 // Select your modem:
 // #define TINY_GSM_MODEM_SIM800
@@ -103,7 +104,7 @@ PubSubClient mqtt(client);
 const char *broker = "cr4v.rubenfgr.com";
 const char *topicSub = "s/u/g/1"; // server/unit/generic/id
 const char *topicPub = "n/u/g/1"; // node/unit/generic/id
-const char *UNIT_GENERIC_ID = "ug1";
+const char *UNIT_GENERIC_ID = "uh1";
 
 // ==================================================
 // TODO Constantes
@@ -477,7 +478,8 @@ void publishCommunication()
 // ==================================================
 void publishData()
 {
-    String payloadString = "2," + (String)getLectura() + "," + (String)getCaudal();
+    String payloadString = "2," + (String)getLectura() + "," + (String)getCaudal() + "," + (String)getElectrovalvula() + "," +
+                           (String)getBoyaBaja() + "," + (String)getBoyaMedia() + "," + (String)getBoyaAlta();
     char payloadCharArray[payloadString.length()];
     payloadString.toCharArray(payloadCharArray, payloadString.length() + 1);
     mqtt.publish(topicPub, payloadCharArray);
@@ -506,10 +508,10 @@ void publishSIMData()
 // ==================================================
 void readOrders(String payload[])
 {
-    /* if (payload[1])
+    if (payload[1])
     {
-        String order1 = payload[1];
-    } */
+        setElectrovalvula(payload[1].toInt());
+    }
     SerialMon.println("¡ordenes recibidas!");
 }
 

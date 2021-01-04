@@ -15,7 +15,7 @@ void setupPulseCounter()
     pinMode(34, INPUT);
 }
 
-void loopPulseCounter(uint32_t &lectura, double &caudal, int &event)
+void loopPulseCounter(long &lectura, float &caudal, int &event)
 {
     t1 = millis();
     int lecturaPIN35 = digitalRead(34);

@@ -1,51 +1,71 @@
-#include "contador-pulsos/contador-pulsos.h"
-#include "temperatura-humedad/temperatura-humedad.h"
+#include "./boyas/boyas.h"
+#include "./electrovalvula/electrovalvula.h"
+#include "./contador/contador.h"
 
 // ==================================================
 //  Sensores
 // ==================================================
-uint32_t lectura = 0;
-double caudal = 0;
-byte temperature = 0;
-byte humidity = 0;
+int boyaBaja = 0;
+int boyaMedia = 0;
+int boyaAlta = 0;
+int electrovalvula = 0;
+long lectura = 0;
+float caudal = 0;
 int event = 0;
 
 void setupSensors()
 {
-    setupPulseCounter();
-    //setupTEMP();
+    setupBoyas();
+    setupElectrovalvula();
+    setupContador();
 }
 
 void loopSensors()
 {
-    loopPulseCounter(lectura, caudal, event);
-    //loopTEMP(temperature, humidity);
+    loopBoyas(boyaBaja, boyaMedia, boyaAlta, event);
+    loopElectrovalvula(electrovalvula, event);
+    loopContador(lectura, caudal, event);
 }
 
-uint32_t getLectura()
+int getBoyaBaja()
+{
+    return boyaBaja;
+}
+
+int getBoyaMedia()
+{
+    return boyaMedia;
+}
+
+int getBoyaAlta()
+{
+    return boyaAlta;
+}
+
+int getElectrovalvula()
+{
+    return electrovalvula;
+}
+
+void setElectrovalvula(int electrovalvulaP)
+{
+    electrovalvula = electrovalvulaP;
+}
+
+long getLectura()
 {
     return lectura;
 }
 
-void setLectura(uint32_t lecturaP)
+void setLectura(long lecturaP)
 {
     lectura = lecturaP;
     event = 1;
 }
 
-double getCaudal()
+float getCaudal()
 {
     return caudal;
-}
-
-uint32_t getTemperature()
-{
-    return temperature;
-}
-
-uint32_t getHumidity()
-{
-    return humidity;
 }
 
 int getEvent()

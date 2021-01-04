@@ -16,7 +16,6 @@ uint32_t readLectura()
 
 void saveLectura(uint32_t lectura)
 {
-    SerialMon.println("save core: " + (String)xPortGetCoreID());
     EEPROM.begin(FLASH_SIZE);
     EEPROM.writeLong(P1_FLASH_POSITION, lectura);
     EEPROM.commit();
