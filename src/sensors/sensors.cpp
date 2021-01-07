@@ -1,6 +1,7 @@
 #include "./boyas/boyas.h"
 #include "./electrovalvula/electrovalvula.h"
 #include "./contador/contador.h"
+#include "../debugger/debugger.h"
 
 // ==================================================
 //  Sensores
@@ -32,14 +33,29 @@ int getBoyaBaja()
     return boyaBaja;
 }
 
+void setBoyaBaja(int boyaBajaP)
+{
+    boyaBaja = boyaBajaP;
+}
+
 int getBoyaMedia()
 {
     return boyaMedia;
 }
 
+void setBoyaMedia(int boyaMediaP)
+{
+    boyaMedia = boyaMediaP;
+}
+
 int getBoyaAlta()
 {
     return boyaAlta;
+}
+
+void setBoyaAlta(int boyaAltaP)
+{
+    boyaAlta = boyaAltaP;
 }
 
 int getElectrovalvula()

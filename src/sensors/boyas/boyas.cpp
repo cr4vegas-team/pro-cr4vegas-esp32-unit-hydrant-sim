@@ -2,12 +2,15 @@
 // D25 --> Electrovalvula
 
 #include <Arduino.h>
-#include "../../global/global.h"
-#include "../sensors.h"
+#include "../../debugger/debugger.h"
 
-const int PIN_BOYA_BAJA = 27;
-const int PIN_BOYA_MEDIA = 26;
-const int PIN_BOYA_ALTA = 25;
+const int PIN_BOYA_BAJA = 35;
+const int PIN_BOYA_MEDIA = 34;
+const int PIN_BOYA_ALTA = 32;
+
+int lecturaBoyaBaja = 0;
+int lecturaBoyaMedia = 0;
+int lecturaBoyaAlta = 0;
 
 void setupBoyas()
 {
@@ -16,24 +19,22 @@ void setupBoyas()
     pinMode(PIN_BOYA_ALTA, INPUT);
 }
 
-void loopBoyas(int &boyaBaja, int &boyaMedia, int &boyaAlta, int &cambioBoyas)
+void loopBoyas(int &boyaBaja, int &boyaMedia, int &boyaAlta, int &event)
 {
-    int lecturaBoyaBaja = digitalRead(PIN_BOYA_BAJA);
-    int lecturaBoyaMedia = digitalRead(PIN_BOYA_MEDIA);
-    int lecturaBoyaAlta = digitalRead(PIN_BOYA_ALTA);
-    if (boyaBaja != lecturaBoyaBaja)
+    lecturaBoyaBaja = digitalRead(PIN_BOYA_BAJA);
+    lecturaBoyaMedia = digitalRead(PIN_BOYA_MEDIA);
+    lecturaBoyaAlta = digitalRead(PIN_BOYA_ALTA);
+
+    if (boyaBaja != lecturaBoyaBaja || boyaMedia != lecturaBoyaMedia || boyaAlta != lecturaBoyaAlta)
     {
+        event = 1;
+
         boyaBaja = lecturaBoyaBaja;
-        cambioBoyas = 1;
-    }
-    if (boyaMedia != lecturaBoyaMedia)
-    {
         boyaMedia = lecturaBoyaMedia;
-        cambioBoyas = 1;
-    }
-    if (boyaAlta != lecturaBoyaAlta)
-    {
         boyaAlta = lecturaBoyaAlta;
-        cambioBoyas = 1;
+
+        printLNDebug("---");
+        printLNDebug((String)lecturaBoyaBaja + ", " + (String)lecturaBoyaMedia + ", " + (String)lecturaBoyaAlta);
+        printLNDebug((String)boyaBaja + ", " + (String)boyaMedia + ", " + (String)boyaAlta);
     }
 }

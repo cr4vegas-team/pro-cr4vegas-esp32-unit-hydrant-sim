@@ -10,15 +10,15 @@ long intervaloRestar = intervalo;
 
 const int EVENTO_LECTURA = 1;
 
-void setupPulseCounter()
+void setupContador()
 {
-    pinMode(34, INPUT);
+    pinMode(33, INPUT);
 }
 
-void loopPulseCounter(long &lectura, float &caudal, int &event)
+void loopContador(long &lectura, float &caudal, int &event)
 {
     t1 = millis();
-    int lecturaPIN35 = digitalRead(34);
+    int lecturaPIN35 = digitalRead(33);
 
     if (lecturaPIN35 == HIGH)
     {

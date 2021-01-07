@@ -1,23 +1,37 @@
 #include <EEPROM.h>
-#include "../main.h"
+#include "../debugger/debugger.h"
+#include "../sensors/sensors.h"
 
 // ==================================================
 //  Memoria FLASH
 // ==================================================
-uint8_t FLASH_SIZE = 50;
-uint8_t P1_FLASH_POSITION = 0;
+int FLASH_SIZE = 50;
+int POS_LECTURA = 0;
+int POS_BOYA_BAJA = 10;
+int POS_BOYA_MEDIA = 20;
+int POS_BOYA_ALTA = 30;
 
-uint32_t readLectura()
+void readDataFromFlash();
+
+void setupSave()
 {
     EEPROM.begin(FLASH_SIZE);
-    uint32_t lectura = EEPROM.readLong(0);
-    return lectura;
+    readDataFromFlash();
 }
 
-void saveLectura(uint32_t lectura)
+void readDataFromFlash()
 {
-    EEPROM.begin(FLASH_SIZE);
-    EEPROM.writeLong(P1_FLASH_POSITION, lectura);
+    setLectura(EEPROM.readLong(POS_LECTURA));
+    setBoyaBaja(EEPROM.readInt(POS_BOYA_BAJA));
+    setBoyaMedia(EEPROM.readInt(POS_BOYA_MEDIA));
+    setBoyaAlta(EEPROM.readInt(POS_BOYA_ALTA));
+}
+
+void saveDataOnFlash()
+{
+    EEPROM.writeLong(POS_LECTURA, getLectura());
+    EEPROM.writeInt(POS_BOYA_BAJA, getBoyaBaja());
+    EEPROM.writeInt(POS_BOYA_MEDIA, getBoyaMedia());
+    EEPROM.writeInt(POS_BOYA_ALTA, getBoyaAlta());
     EEPROM.commit();
-    EEPROM.end();
 }

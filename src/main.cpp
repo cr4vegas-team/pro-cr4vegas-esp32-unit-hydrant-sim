@@ -1,9 +1,8 @@
 #include <Arduino.h>
+#include "debugger/debugger.h"
 #include "sim/sim.h"
 #include "save/save.h"
 #include "sensors/sensors.h"
-
-#define SerialMon Serial
 
 TaskHandle_t taskSensors;
 TaskHandle_t taskSIM;
@@ -16,7 +15,10 @@ void runTaskSIM(void *pvParameters);
 
 void setup()
 {
-    SerialMon.begin(115200);
+    setupDebug();
+    setupSave();
+
+    delay(1000);
     xTaskCreatePinnedToCore(runTaskSensors, "Task Sensors", 5120, NULL, 5, &taskSensors, 0);
     delay(1000);
     xTaskCreatePinnedToCore(runTaskSIM, "Task Sim", 10240, NULL, 6, &taskSIM, 1);
@@ -31,9 +33,7 @@ void runTaskSIM(void *pvParameters)
     // Initialise the xLastWakeTime variable with the current time.
     xLastWakeTime = xTaskGetTickCount();
 
-    SerialMon.println("runTaskSIM running on core: " + (String)xPortGetCoreID());
-
-    setLectura(readLectura()); // Cargo la lectura desde la flash
+    printLNDebug("runTaskSIM running on core: " + (String)xPortGetCoreID());
 
     setupSIM(xLastWakeTime);
 
@@ -48,7 +48,7 @@ void runTaskSIM(void *pvParameters)
 
         if (getEvent() == 1)
         {
-            saveLectura(getLectura());
+            saveDataOnFlash();
             setEvent(0);
         }
     }
@@ -62,7 +62,7 @@ void runTaskSensors(void *pvParameters)
     // Initialise the xLastWakeTime variable with the current time.
     xLastWakeTime = xTaskGetTickCount();
 
-    SerialMon.println("runTaskSensors running on core: " + (String)xPortGetCoreID());
+    printLNDebug("runTaskSensors running on core: " + (String)xPortGetCoreID());
 
     setupSensors();
 

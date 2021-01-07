@@ -1,4 +1,4 @@
 #include <Arduino.h>
 
 void setupElectrovalvula();
-void loopElectrovalvula(int &electrovalvula, int &cambioElectrovalvula);
+void loopElectrovalvula(int &electrovalvula, int &event);

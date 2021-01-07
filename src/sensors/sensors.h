@@ -4,8 +4,11 @@
 void setupSensors();
 void loopSensors();
 int getBoyaBaja();
+void setBoyaBaja(int boyaBajaP);
 int getBoyaMedia();
+void setBoyaMedia(int boyaMediaP);
 int getBoyaAlta();
+void setBoyaAlta(int boyaAltaP);
 int getElectrovalvula();
 void setElectrovalvula(int electrovalvulaP);
 long getLectura();

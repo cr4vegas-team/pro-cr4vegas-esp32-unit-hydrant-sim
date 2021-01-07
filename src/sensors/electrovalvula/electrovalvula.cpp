@@ -2,7 +2,6 @@
 // D25 --> Electrovalvula
 
 #include <Arduino.h>
-#include "../../global/global.h"
 
 const int PIN_ELECTROVALVULA = 13;
 
@@ -13,12 +12,12 @@ void setupElectrovalvula()
     pinMode(PIN_ELECTROVALVULA, OUTPUT);
 }
 
-void loopElectrovalvula(int &electrovalvula, int &cambioElectrovalvula)
+void loopElectrovalvula(int &electrovalvula, int &event)
 {
     if (electrovalvulaLast != electrovalvula)
     {
         electrovalvulaLast = electrovalvula;
-        cambioElectrovalvula = 1;
+        event = 1;
         digitalWrite(PIN_ELECTROVALVULA, electrovalvulaLast);
     }
 }
