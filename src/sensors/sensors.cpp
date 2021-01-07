@@ -3,9 +3,6 @@
 #include "./contador/contador.h"
 #include "../debugger/debugger.h"
 
-// ==================================================
-//  Sensores
-// ==================================================
 int boyaBaja = 0;
 int boyaMedia = 0;
 int boyaAlta = 0;

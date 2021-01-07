@@ -27,25 +27,19 @@ void setup()
 
 void runTaskSIM(void *pvParameters)
 {
-    TickType_t xLastWakeTime;
-    const TickType_t xFrequency = 10;
-
-    // Initialise the xLastWakeTime variable with the current time.
-    xLastWakeTime = xTaskGetTickCount();
-
     printLNDebug("runTaskSIM running on core: " + (String)xPortGetCoreID());
+
+    TickType_t xLastWakeTime = xTaskGetTickCount();
+    const TickType_t xFrequency = 10;
+    vTaskDelayUntil(&xLastWakeTime, xFrequency);
 
     setupSIM(xLastWakeTime);
 
-    vTaskDelayUntil(&xLastWakeTime, xFrequency);
-
+    // Iteración en el núcleo asignado
     for (;;)
     {
-        // Wait for the next cycle.
         vTaskDelayUntil(&xLastWakeTime, xFrequency);
-        // Perform action here.
         loopSIM();
-
         if (getEvent() == 1)
         {
             saveDataOnFlash();
@@ -56,23 +50,18 @@ void runTaskSIM(void *pvParameters)
 
 void runTaskSensors(void *pvParameters)
 {
-    TickType_t xLastWakeTime;
-    const TickType_t xFrequency = 10;
-
-    // Initialise the xLastWakeTime variable with the current time.
-    xLastWakeTime = xTaskGetTickCount();
-
     printLNDebug("runTaskSensors running on core: " + (String)xPortGetCoreID());
+
+    const TickType_t xFrequency = 10;
+    TickType_t xLastWakeTime = xTaskGetTickCount();
+    vTaskDelayUntil(&xLastWakeTime, xFrequency);
 
     setupSensors();
 
-    vTaskDelayUntil(&xLastWakeTime, xFrequency);
-
+    // Iteración en el núcleo asignado
     for (;;)
     {
-        // Wait for the next cycle.
         vTaskDelayUntil(&xLastWakeTime, xFrequency);
-        // Perform action here.
         loopSensors();
     }
 }

@@ -1,5 +1,7 @@
 #include <Arduino.h>
 
+const int PIN_CONTADOR = 33;
+
 int leida = 0;
 double ultimoCaudal = 0.00;
 long ultimaLectura = 0;
@@ -12,13 +14,13 @@ const int EVENTO_LECTURA = 1;
 
 void setupContador()
 {
-    pinMode(33, INPUT);
+    pinMode(PIN_CONTADOR, INPUT);
 }
 
 void loopContador(long &lectura, float &caudal, int &event)
 {
     t1 = millis();
-    int lecturaPIN35 = digitalRead(33);
+    int lecturaPIN35 = digitalRead(PIN_CONTADOR);
 
     if (lecturaPIN35 == HIGH)
     {
@@ -56,4 +58,11 @@ void loopContador(long &lectura, float &caudal, int &event)
     {
         caudal = 0;
     }
+
+    if (ultimoCaudal > 0 && caudal == 0)
+    {
+        event = 1;
+    }
+
+    ultimoCaudal = caudal;
 }

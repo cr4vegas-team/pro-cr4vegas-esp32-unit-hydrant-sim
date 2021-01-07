@@ -220,8 +220,10 @@ void initSIM()
 {
     {
         SerialAT.end();
+
         digitalWrite(PIN_LED_ROJO, HIGH);
         digitalWrite(PIN_LED_VERDE, LOW);
+
         printLNDebug("initSIM() --> wait...");
 
         digitalWrite(PIN_RESET_SIM, LOW);
@@ -323,6 +325,7 @@ void initSIM()
 
         digitalWrite(PIN_LED_VERDE, HIGH);
         digitalWrite(PIN_LED_ROJO, LOW);
+        
         publishedCommunication = false;
     }
 }

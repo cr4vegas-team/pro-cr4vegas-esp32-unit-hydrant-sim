@@ -1,6 +1,3 @@
-// PINS
-// D25 --> Electrovalvula
-
 #include <Arduino.h>
 
 const int PIN_ELECTROVALVULA = 13;

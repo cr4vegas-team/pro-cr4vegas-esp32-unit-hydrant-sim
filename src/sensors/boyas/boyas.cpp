@@ -1,6 +1,3 @@
-// PINS
-// D25 --> Electrovalvula
-
 #include <Arduino.h>
 #include "../../debugger/debugger.h"
 
