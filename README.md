@@ -80,3 +80,5 @@
 Este diagrama es adaptable a todas las unidades de control. La lectura y cálculos sobre los sensores siempre se realizan sobre el núcleo 0 y el envío y recepción de datos sobre el servidor MQTT desde el núcleo 1. La memoria flash es compartida a los dos núcleos por lo que se debe tener especial precaución a la hora de realizar escrituras sobre los datos.
 
 ![Diagrama de flujo](cr4v-esp32-diagrama-de-flujo.jpg)
+
+![Esquema](esquema.png)

@@ -23,8 +23,7 @@
 // #define TINY_GSM_MODEM_SEQUANS_MONARCH
 
 #define PIN_RESET_SIM 21
-#define PIN_LED_VERDE 23
-#define PIN_LED_ROJO 22
+#define PIN_LED_VERDE 2
 
 // Set serial for AT commands (to the module)
 // Use Hardware Serial on Mega, Leonardo, Micro
@@ -56,7 +55,7 @@ SoftwareSerial SerialAT(18, 19); // RX, TX
 #define TINY_GSM_USE_WIFI false
 
 // set GSM PIN, if any
-#define GSM_PIN "1433"
+#define GSM_PIN ""
 
 // Your GPRS credentials, if any
 const char apn[] = "movistar.es";
@@ -101,10 +100,9 @@ PubSubClient mqtt(client);
 //      - Tópico para publicación
 //      - ID cliente en el servidor MQTT
 // ==================================================
-const char *broker = "cr4v.rubenfgr.com";
-const char *topicSub = "s/u/h/1"; // server/unit/hydrant/id
-const char *topicPub = "n/u/h/1"; // node/unit/hydrant/id
-const char *UNIT_GENERIC_ID = "uh1";
+const char *broker = "emqx.rubenfgr.com";
+const char *topicSub = "s/u/h/vi/47"; // server/unit/hydrant/id
+const char *topicPub = "n/u/h/vi/47"; // node/unit/hydrant/id
 
 // ==================================================
 // TODO Constantes
@@ -112,8 +110,7 @@ const char *UNIT_GENERIC_ID = "uh1";
 //      - Velocidad de envio de datos
 //      - Tiempo de espera para volver a intentar conectar
 // ==================================================
-const uint8_t NET_GPRS_ATTEMPTS_MAX = 3;
-const uint16_t MQTT_RECONNECT_ATTEMPTS_MAX = 5;
+const uint16_t MQTT_RECONNECT_ATTEMPTS_MAX = 3;
 const uint32_t RECCONECT_TIME = 10000;
 long PUBLISH_DATA_SPEED = 1000 * 60 * 24; // 1000 milisegundos * 60 minutos * 24 horas (1 día en milisegundos)
 
@@ -171,11 +168,11 @@ void publishSendSpeed();
 // ==================================================
 void setupSIM(TickType_t &xLastWakeTimeP)
 {
+    randomSeed(micros());
     xLastWakeTime = xLastWakeTimeP;
     printLNDebug("setupSim()");
     pinMode(PIN_RESET_SIM, OUTPUT);
     pinMode(PIN_LED_VERDE, OUTPUT);
-    pinMode(PIN_LED_ROJO, OUTPUT);
 
     mqtt.setServer(broker, 1883);
     mqtt.setCallback(mqttCallback);
@@ -208,6 +205,7 @@ void loopSIM()
     else
     {
         publish();
+        digitalWrite(PIN_LED_VERDE, HIGH);
     }
 
     mqtt.loop();
@@ -221,21 +219,22 @@ void initSIM()
     {
         SerialAT.end();
 
-        digitalWrite(PIN_LED_ROJO, HIGH);
         digitalWrite(PIN_LED_VERDE, LOW);
 
         printLNDebug("initSIM() --> wait...");
 
         digitalWrite(PIN_RESET_SIM, LOW);
-        vTaskDelayUntil(&xLastWakeTime, 2000);
+        vTaskDelayUntil(&xLastWakeTime, 5000);
 
         // Set GSM module baud rate
         //TinyGsmAutoBaud(SerialAT, GSM_AUTOBAUD_MIN, GSM_AUTOBAUD_MAX);
         //SerialAT.begin(115200, SERIAL_8N1, 16, 17, false);
         SerialAT.begin(9600);
-        vTaskDelayUntil(&xLastWakeTime, 10000);
+        vTaskDelayUntil(&xLastWakeTime, 5000);
 
         digitalWrite(PIN_RESET_SIM, HIGH);
+
+        vTaskDelayUntil(&xLastWakeTime, 2000);
 
         printLNDebug("modem.init()...");
 
@@ -273,16 +272,10 @@ void initSIM()
 #endif
 
         printLNDebug("Waiting for network...");
-        uint8_t triesNetwork = 0;
         while (!modem.waitForNetwork())
         {
             printLNDebug(" fail!");
-            vTaskDelayUntil(&xLastWakeTime, 1000);
-            if (triesNetwork == NET_GPRS_ATTEMPTS_MAX)
-            {
-                initSIM();
-            }
-            triesNetwork++;
+            initSIM();
         }
         printLNDebug(" success!");
         vTaskDelayUntil(&xLastWakeTime, 100);
@@ -299,16 +292,10 @@ void initSIM()
 #if TINY_GSM_USE_GPRS
         // GPRS connection parameters are usually set after network registration
         printLNDebug(("Connecting GPRS to " + (String)apn + "..."));
-        uint8_t triesGPRS = 0;
         while (!modem.gprsConnect(apn, gprsUser, gprsPass))
         {
             printLNDebug(" fail!");
-            vTaskDelayUntil(&xLastWakeTime, 10000);
-            if (triesGPRS == NET_GPRS_ATTEMPTS_MAX)
-            {
-                initSIM();
-            }
-            triesGPRS++;
+            initSIM();
         }
         printLNDebug(" success!");
 
@@ -323,10 +310,7 @@ void initSIM()
 #endif
         vTaskDelayUntil(&xLastWakeTime, 100);
 
-        digitalWrite(PIN_LED_VERDE, HIGH);
-        digitalWrite(PIN_LED_ROJO, LOW);
-        
-        publishedCommunication = false;
+        publishedData = false;
     }
 }
 
@@ -344,7 +328,10 @@ boolean mqttConnect()
 
     printLNDebug("mqttConnect()...");
 
-    boolean status = mqtt.connect(UNIT_GENERIC_ID);
+    String clientId = "esp32_";
+    clientId += String(random(0xffff), HEX);
+
+    boolean status = mqtt.connect(clientId.c_str());
 
     // Con autenticación
     //boolean status = mqtt.connect("GsmClientName", "mqtt_user", "mqtt_pass");
@@ -452,13 +439,12 @@ void publish()
         publishedData = false;
     }
 
-    if (getEvent() == 1) // Siempre que ocure un evento se envía si o si el dato
+    if (getEvent() == 1)
     {
         publishedData = false;
-        setEvent(0);
     }
 
-    if (!publishedData) // Y en caso de que exista una solicitud se envía también
+    if (!publishedData)
     {
         publishData();
     }
@@ -506,6 +492,8 @@ void publishData()
     if (mqtt.publish(topicPub, payloadCharArray, retained))
     {
         publishedData = true;
+        setEvent(0);
+        printLNDebug("¡Datos enviados!");
     }
 }
 

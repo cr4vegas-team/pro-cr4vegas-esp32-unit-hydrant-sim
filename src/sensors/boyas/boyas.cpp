@@ -1,9 +1,9 @@
 #include <Arduino.h>
 #include "../../debugger/debugger.h"
 
-const int PIN_BOYA_BAJA = 35;
-const int PIN_BOYA_MEDIA = 34;
-const int PIN_BOYA_ALTA = 32;
+const int PIN_BOYA_BAJA = 32;
+const int PIN_BOYA_MEDIA = 35;
+const int PIN_BOYA_ALTA = 34;
 
 int lecturaBoyaBaja = 0;
 int lecturaBoyaMedia = 0;
@@ -30,8 +30,8 @@ void loopBoyas(int &boyaBaja, int &boyaMedia, int &boyaAlta, int &event)
         boyaMedia = lecturaBoyaMedia;
         boyaAlta = lecturaBoyaAlta;
 
-        printLNDebug("---");
+        /* printLNDebug("---");
         printLNDebug((String)lecturaBoyaBaja + ", " + (String)lecturaBoyaMedia + ", " + (String)lecturaBoyaAlta);
-        printLNDebug((String)boyaBaja + ", " + (String)boyaMedia + ", " + (String)boyaAlta);
+        printLNDebug((String)boyaBaja + ", " + (String)boyaMedia + ", " + (String)boyaAlta); */
     }
 }

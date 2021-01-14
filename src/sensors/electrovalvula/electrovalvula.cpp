@@ -11,10 +11,10 @@ void setupElectrovalvula()
 
 void loopElectrovalvula(int &electrovalvula, int &event)
 {
-    if (electrovalvulaLast != electrovalvula)
+    if (electrovalvulaLast != !electrovalvula)
     {
-        electrovalvulaLast = electrovalvula;
+        digitalWrite(PIN_ELECTROVALVULA, !electrovalvula);
+        electrovalvulaLast = !electrovalvula;
         event = 1;
-        digitalWrite(PIN_ELECTROVALVULA, electrovalvulaLast);
     }
 }

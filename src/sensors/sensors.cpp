@@ -63,6 +63,7 @@ int getElectrovalvula()
 void setElectrovalvula(int electrovalvulaP)
 {
     electrovalvula = electrovalvulaP;
+    event = 1;
 }
 
 long getLectura()
@@ -73,7 +74,6 @@ long getLectura()
 void setLectura(long lecturaP)
 {
     lectura = lecturaP;
-    event = 1;
 }
 
 float getCaudal()

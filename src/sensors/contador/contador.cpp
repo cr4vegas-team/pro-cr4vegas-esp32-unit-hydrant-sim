@@ -4,13 +4,12 @@ const int PIN_CONTADOR = 33;
 
 int leida = 0;
 double ultimoCaudal = 0.00;
-long ultimaLectura = 0;
 long t1 = millis();
 long t2 = t1;
 long intervalo = 0;
 long intervaloRestar = intervalo;
 
-const int EVENTO_LECTURA = 1;
+const int EVENTO_CAUDAL = 4;
 
 void setupContador()
 {
@@ -27,11 +26,6 @@ void loopContador(long &lectura, float &caudal, int &event)
         if (!leida)
         {
             lectura++;
-            if ((lectura - ultimaLectura) > EVENTO_LECTURA)
-            {
-                event = 1;
-                ultimaLectura = lectura;
-            }
             leida = 1;
             // Caudal
             intervalo = (t1 - t2) / 1000;
@@ -54,9 +48,15 @@ void loopContador(long &lectura, float &caudal, int &event)
     {
         caudal = round(1000 / intervaloRestar);
     }
+    
     if (caudal < 5)
     {
         caudal = 0;
+    }
+
+    if (caudal - ultimoCaudal > EVENTO_CAUDAL)
+    {
+        event = 1;
     }
 
     if (ultimoCaudal > 0 && caudal == 0)
