@@ -10,7 +10,7 @@ void setBoyaMedia(int boyaMediaP);
 int getBoyaAlta();
 void setBoyaAlta(int boyaAltaP);
 int getElectrovalvula();
-void setElectrovalvula(int electrovalvulaP);
+void setElectrovalvula(int electrovalvulaP, int manualP);
 long getLectura();
 void setLectura(long lecturaP);
 float getCaudal();

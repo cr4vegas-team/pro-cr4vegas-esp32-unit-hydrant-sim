@@ -10,6 +10,10 @@ int electrovalvula = 0;
 long lectura = 0;
 float caudal = 0;
 int event = 0;
+int alarma = 0;
+int manual = 0;
+
+void comprobarBoyas();
 
 void setupSensors()
 {
@@ -21,8 +25,22 @@ void setupSensors()
 void loopSensors()
 {
     loopBoyas(boyaBaja, boyaMedia, boyaAlta, event);
-    loopElectrovalvula(electrovalvula, event);
+    comprobarBoyas();
+    loopElectrovalvula(electrovalvula, alarma, event);
     loopContador(lectura, caudal, event);
+}
+
+void comprobarBoyas()
+{
+    if (boyaMedia == 1 && manual == 0)
+    {
+        alarma = 1;
+    }
+    if (boyaAlta == 1)
+    {
+        alarma = 1;
+        manual = 0;
+    }
 }
 
 int getBoyaBaja()
@@ -60,10 +78,10 @@ int getElectrovalvula()
     return electrovalvula;
 }
 
-void setElectrovalvula(int electrovalvulaP)
+void setElectrovalvula(int electrovalvulaP, int manualP)
 {
     electrovalvula = electrovalvulaP;
-    event = 1;
+    manual = manualP;
 }
 
 long getLectura()
