@@ -42,14 +42,14 @@
 
 ### Arrays de subscripción soportados
 
-| Array            | Descripción                                  |
-| ---------------- | -------------------------------------------- |
-| 1                | comunicación                                 |
-| 2                | datos de sensores                            |
-| 3                | datos de la sim                              |
-| 5,electrovalvula | ordenes a actuadores                         |
-| 7,ss             | configuración de velocidad de envio de datos |
-| 9,lectura        | configuración                                |
+| Array              | Descripción                                    |
+| ------------------ | ---------------------------------------------- |
+| 1                  | comunicación                                   |
+| 2                  | datos de sensores                              |
+| 3                  | datos de la sim                                |
+| 5,electrovalvula   | ordenes a actuadores                           |
+| 7,ss               | configuración de velocidad de envio de datos   |
+| 9,lectura,captador | configuración. Captador, 1 = 1000 l, 0 = 100 l |
 
 ## Pines
 

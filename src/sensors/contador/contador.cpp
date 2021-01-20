@@ -3,6 +3,7 @@
 const int PIN_CONTADOR = 33;
 
 int leida = 0;
+int lecturaContador = 0;
 double ultimoCaudal = 0.00;
 long t1 = millis();
 long t2 = t1;
@@ -16,7 +17,7 @@ void setupContador()
     pinMode(PIN_CONTADOR, INPUT);
 }
 
-void loopContador(long &lectura, float &caudal, int &event)
+void loopContador(long &lectura, float &caudal, int &captador, int &event)
 {
     t1 = millis();
     int lecturaPIN35 = digitalRead(PIN_CONTADOR);
@@ -25,13 +26,26 @@ void loopContador(long &lectura, float &caudal, int &event)
     {
         if (!leida)
         {
-            lectura++;
+            if (captador == 0)
+            {
+                lecturaContador++;
+                if (lecturaContador == 10)
+                {
+                    lecturaContador = 0;
+                    lectura++;
+                }
+            }
+            else
+            {
+                lectura++;
+            }
+
             leida = 1;
             // Caudal
-            intervalo = (t1 - t2) / 1000;
+            intervalo = (t1 - t2) / 1000; // tiempo entre pulso y pulso en segundos
             if (intervalo != 0)
             {
-                caudal = round(1000 / intervalo);
+                caudal = round(100 / intervalo);
             }
             if (caudal < 0)
                 caudal = 0;
@@ -46,9 +60,9 @@ void loopContador(long &lectura, float &caudal, int &event)
     intervaloRestar = (t1 - t2) / 1000;
     if (intervaloRestar != 0 && intervaloRestar > intervalo)
     {
-        caudal = round(1000 / intervaloRestar);
+        caudal = round(100 / intervaloRestar);
     }
-    
+
     if (caudal < 5)
     {
         caudal = 0;

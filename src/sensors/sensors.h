@@ -16,3 +16,5 @@ void setLectura(long lecturaP);
 float getCaudal();
 int getEvent();
 void setEvent(int eventP);
+void setCaptador(int captadorP);
+int getCaptador();

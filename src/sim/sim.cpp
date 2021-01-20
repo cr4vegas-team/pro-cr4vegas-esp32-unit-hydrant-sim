@@ -101,8 +101,8 @@ PubSubClient mqtt(client);
 //      - ID cliente en el servidor MQTT
 // ==================================================
 const char *broker = "emqx.rubenfgr.com";
-const char *topicSub = "s/u/h/vi/91"; // server/unit/hydrant/id
-const char *topicPub = "n/u/h/vi/91"; // node/unit/hydrant/id
+const char *topicSub = "s/u/h/vi/172"; // server/unit/hydrant/id
+const char *topicPub = "n/u/h/vi/172"; // node/unit/hydrant/id
 
 // ==================================================
 // TODO Constantes
@@ -185,6 +185,7 @@ void loopSIM()
 {
     if (!mqtt.connected())
     {
+        digitalWrite(PIN_LED_VERDE, LOW);
         if (!modem.isNetworkConnected())
         {
             initSIM();
@@ -236,9 +237,10 @@ void initSIM()
 
         printLNDebug("modem.init()...");
 
-        if (!modem.restart())
+        if (!modem.init())
         {
             printLNDebug("ERROR!");
+            modem.restart();
             initSIM();
         }
         printLNDebug("OK!");
@@ -556,9 +558,10 @@ void publishSendSpeed()
 // ==================================================
 void readConfiguration(String payload[])
 {
-    if (payload[1] != nullptr && payload[1] != "")
+    if (payload[1] != nullptr && payload[1] != "" && payload[2])
     {
         setLectura(payload[1].toInt());
+        setCaptador(payload[2].toInt());
         printLNDebug("¡configuración recibida!");
     }
     else

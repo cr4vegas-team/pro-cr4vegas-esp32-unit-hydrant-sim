@@ -12,6 +12,7 @@ float caudal = 0;
 int event = 0;
 int alarma = 0;
 int manual = 0;
+int captador = 0; // 0 = 100 l & 1 = 1000 l
 
 void comprobarBoyas();
 
@@ -27,7 +28,7 @@ void loopSensors()
     loopBoyas(boyaBaja, boyaMedia, boyaAlta, event);
     comprobarBoyas();
     loopElectrovalvula(electrovalvula, alarma, event);
-    loopContador(lectura, caudal, event);
+    loopContador(lectura, caudal, captador, event);
 }
 
 void comprobarBoyas()
@@ -107,4 +108,12 @@ int getEvent()
 void setEvent(int eventP)
 {
     event = eventP;
+}
+
+void setCaptador(int captadorP) {
+    captador = captadorP;
+}
+
+int getCaptador() {
+    return captador;
 }
