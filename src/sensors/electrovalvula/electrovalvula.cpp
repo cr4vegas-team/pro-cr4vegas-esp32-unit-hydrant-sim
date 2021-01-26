@@ -8,7 +8,6 @@ int electrovalvulaLast = 0;
 void setupElectrovalvula()
 {
     pinMode(PIN_ELECTROVALVULA, OUTPUT);
-    digitalWrite(PIN_ELECTROVALVULA, HIGH);
 }
 
 void loopElectrovalvula(int &electrovalvula, int &alarma, int &event)
@@ -21,7 +20,7 @@ void loopElectrovalvula(int &electrovalvula, int &alarma, int &event)
         // Si recibo un 1 y el último estado es 1
         if (electrovalvulaLast == 1)
         {
-            digitalWrite(PIN_ELECTROVALVULA, HIGH); // CIERRO
+            digitalWrite(PIN_ELECTROVALVULA, LOW); // CIERRO
             electrovalvulaLast = 0;
             electrovalvula = 0;
             event = 1;
@@ -34,11 +33,11 @@ void loopElectrovalvula(int &electrovalvula, int &alarma, int &event)
         {
             if (electrovalvula == 1)
             {
-                digitalWrite(PIN_ELECTROVALVULA, LOW); // CIERRO
+                digitalWrite(PIN_ELECTROVALVULA, HIGH); // ABRO
             }
             else
             {
-                digitalWrite(PIN_ELECTROVALVULA, HIGH); // ABRO
+                digitalWrite(PIN_ELECTROVALVULA, LOW); // CIERRO
             }
             electrovalvulaLast = electrovalvula;
             event = 1;
