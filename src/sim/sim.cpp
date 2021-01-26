@@ -1,6 +1,19 @@
 #include "../sensors/sensors.h"
 #include "../debugger/debugger.h"
 
+#define GSM_PIN ""
+const char apn[] = "movistar.es";
+const char gprsUser[] = "MOVISTAR";
+const char gprsPass[] = "MOVISTAR";
+const char wifiSSID[] = "";
+const char wifiPass[] = "";
+const char *broker = "emqx.rubenfgr.com";
+const char *topicSub = "s/u/h/vi/172";
+const char *topicPub = "n/u/h/vi/172";
+const uint16_t MQTT_RECONNECT_ATTEMPTS_MAX = 3;
+const uint32_t RECCONECT_TIME = 10000;
+long PUBLISH_DATA_SPEED = 1000 * 60 * 24;
+
 // Select your modem:
 // #define TINY_GSM_MODEM_SIM800
 // #define TINY_GSM_MODEM_SIM808
@@ -54,18 +67,6 @@ SoftwareSerial SerialAT(18, 19); // RX, TX
 #define TINY_GSM_USE_GPRS true
 #define TINY_GSM_USE_WIFI false
 
-// set GSM PIN, if any
-#define GSM_PIN ""
-
-// Your GPRS credentials, if any
-const char apn[] = "movistar.es";
-const char gprsUser[] = "MOVISTAR";
-const char gprsPass[] = "MOVISTAR";
-
-// Your WiFi connection credentials, if applicable
-const char wifiSSID[] = "";
-const char wifiPass[] = "";
-
 #include <TinyGsmClient.h>
 #include <PubSubClient.h>
 
@@ -92,27 +93,6 @@ TinyGsm modem(SerialAT);
 #endif
 TinyGsmClient client(modem);
 PubSubClient mqtt(client);
-
-// ==================================================
-// TODO MQTT. Constantes
-//      - Dirección del servidor MQTT
-//      - Tópico para subscripción
-//      - Tópico para publicación
-//      - ID cliente en el servidor MQTT
-// ==================================================
-const char *broker = "emqx.rubenfgr.com";
-const char *topicSub = "s/u/h/vi/172"; // server/unit/hydrant/id
-const char *topicPub = "n/u/h/vi/172"; // node/unit/hydrant/id
-
-// ==================================================
-// TODO Constantes
-//      - Intentos de conexión a MQTT antes de reiniciar la SIM
-//      - Velocidad de envio de datos
-//      - Tiempo de espera para volver a intentar conectar
-// ==================================================
-const uint16_t MQTT_RECONNECT_ATTEMPTS_MAX = 3;
-const uint32_t RECCONECT_TIME = 10000;
-long PUBLISH_DATA_SPEED = 1000 * 60 * 24; // 1000 milisegundos * 60 minutos * 24 horas (1 día en milisegundos)
 
 // ==================================================
 //  TODO Varaibles de tiempos
