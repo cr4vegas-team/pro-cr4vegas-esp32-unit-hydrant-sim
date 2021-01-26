@@ -1,5 +1,7 @@
 #include <Arduino.h>
 
+// FICHERO DE CONFIGURACIÓN
+
 #define GSM_PIN ""
 const char apn[] = "movistar.es";
 const char gprsUser[] = "MOVISTAR";
