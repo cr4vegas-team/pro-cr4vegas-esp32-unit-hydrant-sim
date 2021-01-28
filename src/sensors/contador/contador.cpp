@@ -72,7 +72,7 @@ void loopContador(long &lectura, float &caudal, int &captador, int &event)
         caudal = 0;
     }
 
-    if (caudal - ultimoCaudal > EVENTO_CAUDAL)
+    if (abs(caudal - ultimoCaudal) > EVENTO_CAUDAL)
     {
         event = 1;
     }
