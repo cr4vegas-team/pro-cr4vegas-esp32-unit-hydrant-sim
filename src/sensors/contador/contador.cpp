@@ -28,6 +28,8 @@ void loopContador(long &lectura, float &caudal, int &captador, int &event)
     {
         if (!leida)
         {
+            intervalo = (t1 - t2) / 1000; // tiempo entre pulso y pulso en segundos
+
             if (captador == 0)
             {
                 lecturaContador++;
@@ -37,22 +39,26 @@ void loopContador(long &lectura, float &caudal, int &captador, int &event)
                     lectura++;
                     eventoLectura++;
                 }
+                if (intervalo != 0)
+                {
+                    caudal = round(100 / intervalo);
+                }
             }
             else
             {
                 lectura++;
                 eventoLectura++;
+                if (intervalo != 0)
+                {
+                    caudal = round(1000 / intervalo);
+                }
             }
 
             leida = 1;
-            // Caudal
-            intervalo = (t1 - t2) / 1000; // tiempo entre pulso y pulso en segundos
-            if (intervalo != 0)
-            {
-                caudal = round(100 / intervalo);
-            }
             if (caudal < 0)
+            {
                 caudal = 0;
+            }
             t2 = t1;
         }
     }
@@ -62,9 +68,17 @@ void loopContador(long &lectura, float &caudal, int &captador, int &event)
     }
 
     intervaloRestar = (t1 - t2) / 1000;
+
     if (intervaloRestar != 0 && intervaloRestar > intervalo)
     {
-        caudal = round(100 / intervaloRestar);
+        if (captador == 0)
+        {
+            caudal = round(100 / intervaloRestar);
+        }
+        else
+        {
+            caudal = round(1000 / intervaloRestar);
+        }
     }
 
     if (caudal < 5)
