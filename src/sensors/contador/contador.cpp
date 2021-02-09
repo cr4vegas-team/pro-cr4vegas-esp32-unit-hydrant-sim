@@ -46,6 +46,7 @@ void loopContador(long &lectura, float &caudal, int &captador, int &event)
             }
             else
             {
+                // ACTUALIZADO!!! 09/02/2021
                 lectura++;
                 eventoLectura++;
                 if (intervalo != 0)
