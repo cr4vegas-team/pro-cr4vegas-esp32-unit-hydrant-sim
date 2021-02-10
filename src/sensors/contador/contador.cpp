@@ -1,4 +1,8 @@
 #include <Arduino.h>
+#include "../../debugger/debugger.h"
+#include "math.h"
+
+// ACTUALIZADO!!! 10/02/2021
 
 const int PIN_CONTADOR = 33;
 
@@ -8,8 +12,8 @@ int eventoLectura = 0;
 double ultimoCaudal = 0.00;
 long t1 = millis();
 long t2 = t1;
-long intervalo = 0;
-long intervaloRestar = intervalo;
+double intervalo = 0;
+double intervaloRestar = intervalo;
 
 const int EVENTO_CAUDAL = 4;
 const int EVENTO_LECTURA = 10;
@@ -28,8 +32,8 @@ void loopContador(long &lectura, float &caudal, int &captador, int &event)
     {
         if (!leida)
         {
-            intervalo = (t1 - t2) / 1000; // tiempo entre pulso y pulso en segundos
 
+            intervalo = (t1 - t2) / 1000.0; // tiempo entre pulso y pulso en milisegundos
             if (captador == 0)
             {
                 lecturaContador++;
@@ -41,17 +45,16 @@ void loopContador(long &lectura, float &caudal, int &captador, int &event)
                 }
                 if (intervalo != 0)
                 {
-                    caudal = round(100 / intervalo);
+                    caudal = roundf((100 / intervalo) * 100) / 100;
                 }
             }
             else
             {
-                // ACTUALIZADO!!! 09/02/2021
                 lectura++;
                 eventoLectura++;
                 if (intervalo != 0)
                 {
-                    caudal = round(1000 / intervalo);
+                    caudal = roundf((1000 / intervalo) * 100) / 100;
                 }
             }
 
@@ -68,17 +71,17 @@ void loopContador(long &lectura, float &caudal, int &captador, int &event)
         leida = 0;
     }
 
-    intervaloRestar = (t1 - t2) / 1000;
+    intervaloRestar = (t1 - t2) / 1000; // Milisegundos
 
-    if (intervaloRestar != 0 && intervaloRestar > intervalo)
+    if (intervaloRestar != 0 && intervaloRestar > intervalo) // Si es mayor que el último intervalo del pulso
     {
         if (captador == 0)
         {
-            caudal = round(100 / intervaloRestar);
+            caudal = roundf((100 / intervaloRestar) * 100) / 100;
         }
         else
         {
-            caudal = round(1000 / intervaloRestar);
+            caudal = roundf((1000 / intervalo) * 100) / 100;
         }
     }
 
